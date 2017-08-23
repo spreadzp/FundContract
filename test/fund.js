@@ -9,10 +9,8 @@ contract('Fund', function (accounts) {
     fund = await Fund.new(sposorCoin, wallets);  
   });
 
-  it("should create Fund object",async () => { 
-     
-    assert.isObject(fund,"null is not an object");
- 
+  it("should create Fund object",async () => {      
+    assert.isObject(fund,"null is not an object"); 
   })
 
   it("should call truthy createFund method",async () => {     

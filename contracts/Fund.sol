@@ -1,9 +1,9 @@
 pragma solidity ^0.4.13;  
 
 import "./StandardToken.sol";
+import "./Owned.sol";
 
-contract Fund is StandardToken { 
-    uint public sumAllWallets;
+contract Fund is StandardToken,Owned { 
     StandardToken public standardToken;
     address[] public wallets;
     
@@ -13,7 +13,7 @@ contract Fund is StandardToken {
         balances[standardToken] = 10000; // for tests 
     }
     
-    function createFund() returns(bool) {  
+    function createFund() onlyOwner returns(bool) {  
         if (balances[standardToken] > 0) {
             if (wallets.length != 0) {
                 uint partCoinsForWallet = balances[standardToken]/wallets.length;
@@ -40,18 +40,16 @@ contract Fund is StandardToken {
 	    return true;
     } 
 	
-	function getSumOfWallets() public returns(uint sum) {	    
+	function getSumOfWallets()constant public returns(uint sum) {
+        uint sumAllWallets;	    
 	    for (uint i = 0; i < wallets.length; i++) { 
 	        sumAllWallets += balances[wallets[i]]; 
 	    }
 	    return sumAllWallets;
 	} 
     
-    function withdraw(address _spender, uint256 _value) public returns(bool success) { 
+    function withdraw(address _spender, uint256 _value)payable public returns(bool success) { 
         require(balances[msg.sender] >= _value);
         return approve(_spender, _value);
-	} 
-    function getWallets() public returns(uint success) {  
-        return balances[wallets[1]];
 	} 
 }
