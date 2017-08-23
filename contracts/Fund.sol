@@ -17,14 +17,17 @@ contract Fund is StandardToken {
         if (balances[standardToken] > 0) {
             if (wallets.length != 0) {
                 uint partCoinsForWallet = balances[standardToken]/wallets.length;
-                fillToWallets(partCoinsForWallet);
-                return (getSumOfWallets() == partCoinsForWallet * wallets.length);
+                if (fillWallets(partCoinsForWallet)) {
+                    return (getSumOfWallets() == partCoinsForWallet * wallets.length);
+                }    
+                return false;
             }
-        } 
-        return false;
+            return false;
+        }
+        return false;         
     }
 
-    function fillToWallets(uint partCoinsForWallet) returns(bool isSuccessFill) {
+    function fillWallets(uint partCoinsForWallet) returns(bool isSuccessFill) {
         for (uint i = 0; i < wallets.length; i++) {
             if (balances[standardToken] >= partCoinsForWallet) {
                 balances[standardToken] -= partCoinsForWallet;
@@ -47,5 +50,8 @@ contract Fund is StandardToken {
     function withdraw(address _spender, uint256 _value) public returns(bool success) { 
         require(balances[msg.sender] >= _value);
         return approve(_spender, _value);
+	} 
+    function getWallets() public returns(uint success) {  
+        return balances[wallets[1]];
 	} 
 }
